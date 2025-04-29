@@ -233,12 +233,17 @@ app.get('/api/users/:_id/logs', function(req, res) {
           });
         }
 
-        // Format the 'date' for each exercise
-        const formattedLog = exerciseData.map(exercise => ({
-          description: exercise.description,
-          duration: exercise.duration,
-          date: exercise.date.toDateString()
-        }));
+        let formattedLog = [];
+
+        if(exerciseData != null)
+        {
+          // Format the 'date' for each exercise
+          formattedLog = exerciseData.map(exercise => ({
+            description: exercise.description,
+            duration: exercise.duration,
+            date: exercise.date.toDateString()
+          }));
+        }
 
         let exerciseCount = formattedLog.length;
 
