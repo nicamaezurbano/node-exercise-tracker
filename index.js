@@ -43,11 +43,10 @@ app.post('/api/users', function(req, res) {
     user.save(function(error, data) {
       if(error)
       {
-        res.statusCode = 500; 
-        res.json({ 'Error': error.message });
+        return res.status(500).json({ 'Error': error.message });
       }
 
-      res.json({
+      return res.json({
         "_id": data._id,
         "username": data.username
       });
@@ -61,11 +60,10 @@ app.get('/api/users', function(req, res) {
   User.find({}, function(error, data) {
     if(error)
     {
-      res.status = 400;
-      res.json({"Error": error});
+      return res.status(400).json({"Error": error});
     }
 
-    res.json(data);
+    return res.json(data);
   });
 });
 
@@ -77,14 +75,13 @@ app.get('/api/users', function(req, res) {
       let duration = req.body.duration;
       let date = new Date().toDateString();
 
-      if(req.body.date !== "")
+      if(req.body.date)
       {
         date = new Date(req.body.date).toDateString();
 
         if(date == 'Invalid Date')
         {
-          res.status = 400;
-          res.json({
+          return res.status(400).json({
             'Error': 'Invalid date'
           });
         }
@@ -92,8 +89,7 @@ app.get('/api/users', function(req, res) {
       
       if(isNaN(duration))
       {
-          res.status = 400;
-          res.json({
+          return res.status(400).json({
             'Error': 'Duration should be number'
           });
       }
@@ -101,8 +97,7 @@ app.get('/api/users', function(req, res) {
       User.findById(id, function(error, userData) {
         if(error)
         {
-          res.status = 400;
-          res.json({
+          return res.status(400).json({
             'Error (User.findById)': error
           });
         }
@@ -120,13 +115,12 @@ app.get('/api/users', function(req, res) {
           exercise.save(function(error, exerciseData) {
             if(error)
             {
-              res.status = 400;
-              res.json({
+              return res.status(400).json({
                 'Error (exercise.save)': error
               });
             }
 
-            res.json({
+            return res.json({
               _id: userData['_id'],
               username: userData['username'],
               date: new Date(exerciseData['date']).toDateString(),
@@ -137,8 +131,7 @@ app.get('/api/users', function(req, res) {
         }
         else
         {
-          res.status = 400;
-          res.json({
+          return res.status(400).json({
             'Error': 'Cannot find user'
           });
         }
@@ -159,8 +152,7 @@ app.get('/api/users/:_id/logs', function(req, res) {
 
     if(from == 'Invalid Date')
     {
-      res.status = 400;
-      res.json({
+      return res.status(400).json({
         'Error': 'Invalid date'
       });
     }
@@ -172,8 +164,7 @@ app.get('/api/users/:_id/logs', function(req, res) {
 
     if(to == 'Invalid Date')
     {
-      res.status = 400;
-      res.json({
+      return res.status(400).json({
         'Error': 'Invalid date'
       });
     }
@@ -183,8 +174,7 @@ app.get('/api/users/:_id/logs', function(req, res) {
   {
     if(isNaN(req.query.limit))
     {
-      res.status = 400;
-      res.json({
+      return res.status(400).json({
         'Error': 'Limit should be number'
       });
     }
@@ -195,8 +185,7 @@ app.get('/api/users/:_id/logs', function(req, res) {
   User.findById(id, function(error, userData) {
     if(error)
     {
-      res.status = 400;
-      res.json({'Error(User.findById)': error});
+      return res.status(400).json({'Error(User.findById)': error});
     }
 
     if(userData != null)
@@ -227,8 +216,7 @@ app.get('/api/users/:_id/logs', function(req, res) {
       exercise.exec(function(error, exerciseData) {
         if(error)
         {
-          res.status = 400;
-          res.json({
+          return res.status(400).json({
             'Error (exercise.exec)': error
           });
         }
@@ -247,7 +235,7 @@ app.get('/api/users/:_id/logs', function(req, res) {
 
         let exerciseCount = formattedLog.length;
 
-        res.json({
+        return res.json({
           '_id': userData["_id"],
           'username': userData['username'],
           'count': exerciseCount,
@@ -259,8 +247,7 @@ app.get('/api/users/:_id/logs', function(req, res) {
     }
     else
     {
-      res.status = 400;
-      res.json({
+      return res.status(400).json({
         'Error': 'Cannot find user'
       });
     }
